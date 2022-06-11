@@ -1,49 +1,21 @@
 const connection = require("../database")
 
 
-// const { Professional } = require("../models/claseProfesional");
-
-// let profesionales = null;
-
-// let profesional1 = new Professional('David', 30, 'M', 60, 1.70);
-// let profesional2 = new Professional('Andrés', 20, 'M', 70, 1.80);
-
-let alumnos = [];
-
-// profesionales.length
-
 function getStart( request, response ){
     let respuesta = {error: true, codigo: 200, mensaje: 'Punto de inicio'};
     response.send( respuesta );
     next();
 }
 
-function getAlumnosParams( request, response ){
-    let id = request.params.id;
-
-    let respuesta;
-
-    if( alumnos.length > id ){
-
-        respuesta = alumnos[id];
-
-    }
-    else{
-        respuesta = {error: true, codigo: 200, mensaje: "El usuario no existe"};
-    }
-
-    response.send( respuesta );
-}
-
 function getAlumnos( request, response ){
 
     let sql;
     
-    if( request.params.id == null ){
-        sql = "SELECT * FROM students";
+    if( request.params.id ){
+        sql = "SELECT * FROM students WHERE student_id=" + request.params.id;
     }
     else{
-        sql = "SELECT * FROM students WHERE id=" + request.params.id;
+        sql = "SELECT * FROM students";
     }
 
     connection.query(sql, (err, result) => {
@@ -57,23 +29,13 @@ function getAlumnos( request, response ){
 
 }
 
-// let sql = "UPDATE marks SET mark = 5 WHERE mark < 5";
-// connection.query(sql, (err, result) => {
-//     if( err ){
-//         console.log( err );
-//     }
-//     else{
-//         console.log(result);
-//     }
-// });
-
 function postAlumnos( request, response ){
 
     console.log(request.body);
 
     let sql = "INSERT INTO students (first_name, last_name) " + 
-                "VALUES ('" + request.body.nombre + "', '" +
-                                request.body.apellido + "')";
+                "VALUES ('" + request.body.first_name + "', '" +
+                                request.body.last_name + "')";
 
     console.log(sql);
     connection.query(sql, (err, result) => {
@@ -90,61 +52,50 @@ function postAlumnos( request, response ){
             }
         }
     })
-    i
 
 }
 
-function putProfesionales( request, response ){
+function putAlumnos( request, response ){
 
-    let id = request.body.id;
+    console.log(request.body);
 
-    let respuesta;
+    let first_name = request.body.first_name;
+    let last_name = request.body.last_name;
+    let student_id = request.body.student_id;
+    let params = [first_name, last_name, student_id];
 
-    if( profesionales.length > id ){
-
-        profesionales[id].name   = request.body.name;
-        profesionales[id].age    = request.body.age;
-        profesionales[id].genre  = request.body.genre;
-        profesionales[id].weight = request.body.weight;
-        profesionales[id].height = request.body.height;
-
-        respuesta = {error: false, codigo: 200, 
-            mensaje: 'Usuario actualizado', resultado: profesionales};
-
-    }
-    else{
-        respuesta = { error: true, codigo: 200, 
-                    mensaje: 'Profesional no existente', resultado: profesionales}
-    }
-
-    response.send( respuesta );
+    let sql = "UPDATE students SET first_name = COALESCE(?, first_name) , " + 
+               "last_name = COALESCE(?, last_name)  WHERE student_id = ?";
+    console.log(sql); 
+    connection.query(sql, params,function (err, result) 
+    {
+        if (err) 
+            console.log(err);
+        else 
+        {
+            response.send(result);
+        }
+    }); 
 
 }
 
-function deleteProfesionales( request, response ){
+function deleteAlumno(request, response){
 
-    let id = request.body.id;
+    let id = request.body.student_id;
+    params = [id];
 
-    let respuesta;
+    let dele = `DELETE FROM students WHERE student_id=?`;
 
-    if( profesionales.length > id ){
-
-        profesionales.splice( id, 1 );
-
-        respuesta = {error: false, codigo: 200,
-                    mensaje: 'Usuario eliminado', resultado: profesionales};
-
-    }
-    else{
-
-        respuesta = {error: true, codigo: 200, 
-            mensaje: 'El usuario no existe', resultado: profesionales};
-
-    }
-
-    response.send( respuesta );
-
+    connection.query(dele, params, (err, result) => {
+        if(err){
+            console.log(err);
+        }else{
+            console.log("Alumno borrado");
+            console.log(result);
+        }
+        response.send(result)
+    });
 }
 
 
-module.exports = {getStart, getProfesionales, getProfesionalesParams, postProfesionales, putProfesionales, deleteProfesionales}
+module.exports = {getStart, getAlumnos, postAlumnos, putAlumnos, deleteAlumno};

@@ -1,19 +1,19 @@
 const { Router } = require("express");
 const router = Router();
 const alumnosCtrl = require("../controller/alumnos.controller");
-// const alumnosCtrl = require("../controller/profesionales.controller");
 
-router.get( "/", profesionalesCtrl.getStart );
 
-router.get( "/alumnos", profesionalesCtrl.getProfesionales );
+router.get( "/", alumnosCtrl.getStart );
 
-router.get( "/alumnos/:id", profesionalesCtrl.getProfesionalesParams );
+router.get( "/alumnos/:id", alumnosCtrl.getAlumnos);
 
-router.post( "/alumnos", profesionalesCtrl.postProfesionales );
+router.get( "/alumnos", alumnosCtrl.getAlumnos);
 
-router.put( "/alumnos", profesionalesCtrl.putProfesionales );
+router.post( "/alumnos", alumnosCtrl.postAlumnos);
 
-router.delete( "/alumnos", profesionalesCtrl.deleteProfesionales );
+router.put( "/alumnos", alumnosCtrl.putAlumnos ); 
+
+router.delete( "/alumnos", alumnosCtrl.deleteAlumno );
 
 
 module.exports = router;
