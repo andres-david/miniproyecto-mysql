@@ -6,16 +6,16 @@ let printTable = ( lista ) => {
 
     document.querySelector('.list__profesionales').style.display = "block";
 
-    let alumno;
+    let nota;
 
     for( let i = 0; i < lista.length ; i++ ){
 
-        alumno = lista[i];
+        nota = lista[i];
 
         let tr = `<tr>    
-            <td>${alumno.student_id}</td>
-            <td>${alumno.first_name} </td>
-            <td>${alumno.last_name}</td>
+            <td>${nota.id_mark}</td>
+            <td>${nota.date}</td>
+            <td>${nota.mark}</td>
         </tr>`;
 
         bodyList.innerHTML += tr;
@@ -24,7 +24,7 @@ let printTable = ( lista ) => {
 
 }
 
-async function getAlumnos(){
+async function getNotas(){
 
     const id  = document.querySelector('#id').value;
 
@@ -32,7 +32,7 @@ async function getAlumnos(){
 
     document.querySelector('#form').reset();
 
-    let url   = `http://localhost:3000/alumnos/${id}`;
+    let url   = `http://localhost:3000/notas/${id}`;
     let param = {
         headers: {
             "content-type": "application/json; charset=UTF-8"
@@ -44,8 +44,6 @@ async function getAlumnos(){
         let data = await fetch( url, param );
         let result = await data.json();
 
-        console.log( result );
-
         printTable( result );
         
     } catch (error) {
@@ -53,30 +51,30 @@ async function getAlumnos(){
     }
 }
 
-async function postAlumnos(){
+async function postNotas(){
     
     try {
 
-        let nombre   = document.querySelector('#nombre').value;
-        let apellido = document.querySelector('#apellido').value;
+        let date   = document.querySelector('#date').value;
+        let mark = document.querySelector('#mark').value;
     
-        let nuAlumno = {
-            first_name: nombre,
-            last_name: apellido 
+        let nuMark = {
+            date: date,
+            mark: mark 
         }
 
         document.querySelector('#form').reset();
     
-        console.log(nuAlumno);
+        console.log(nuMark);
     
-        let url   = `http://localhost:3000/alumnos`;
+        let url   = `http://localhost:3000/notas`;
     
         let param = {
     
             headers:{
                 "content-type": "application/json; charset=UTF-8"
             },
-            body: JSON.stringify( nuAlumno ),
+            body: JSON.stringify( nuMark ),
             method: "POST"
     
         }
@@ -94,29 +92,27 @@ async function postAlumnos(){
 
 }
 
-async function putAlumnos(){
+async function putNotas(){
 
     try {
-        let nombre   = document.querySelector('#nombre').value;
-        let apellido = document.querySelector('#apellido').value;
-        let id       = document.querySelector('#id').value;
+        let date   = document.querySelector('#date').value;
+        let mark = document.querySelector('#mark').value;
 
-        let nuInfo = {
-            "first_name": nombre ? nombre : null,
-            "last_name": apellido ? apellido : null,
-            "student_id": id,
+        let nuMark = {
+            date: date,
+            mark: mark 
         }
 
         document.querySelector('#form').reset();
     
-        let url   = `http://localhost:3000/alumnos`;
+        let url   = `http://localhost:3000/notas`;
     
         let param = {
     
             headers:{
                 "content-type": "application/json; charset=UTF-8"
             },
-            body: JSON.stringify( nuInfo ),
+            body: JSON.stringify( nuMark ),
             method: "PUT"
     
         }
@@ -128,8 +124,6 @@ async function putAlumnos(){
 
         console.log( result );
 
-        printTable( result.resultado );
-
     } catch (error) {
         
         console.log( error );
@@ -138,18 +132,18 @@ async function putAlumnos(){
 
 }
 
-async function deleteAlumno(){
+async function deleteNota(){
 
     try {
         let i = document.getElementById('id').value;
 
         let indi = {
-            "student_id": i,
+            "id_mark": i,
         }
 
         document.querySelector('#form').reset();
 
-        let url   = `http://localhost:3000/alumnos`;
+        let url   = `http://localhost:3000/notas`;
         
         let param = {
             
@@ -175,4 +169,3 @@ async function deleteAlumno(){
     }
 
 }
-
