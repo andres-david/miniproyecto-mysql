@@ -145,21 +145,3 @@ a:hover{
     display: none;
 }
 
-.table{
-    border: 1px solid #B0B3B8;
-    border-radius: 5px;
-    /* border-collapse: collapse; */
-    text-align: center;
-    color: #B0B3B8;
-
-}
-
-th{
-    padding: 10px 0;
-    background-color: #242526;
-    /* height: 30px; */
-}
-
-td{
-    padding: 5px 0;
-}

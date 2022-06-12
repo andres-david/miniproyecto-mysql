@@ -1,3 +1,16 @@
+// const showToast = require("../../../toast");
+
+function showToast(message, color)
+{
+    document.getElementById("toastText").innerText=message;
+    let toastElement  = document.getElementById('toast')
+
+    toastElement.className = toastElement.className.replace("bg-warning").replace("bg-danger") + " "  + color;
+
+    let toast = new bootstrap.Toast(toastElement)
+    toast.show()
+}
+
 let printTable = ( lista ) => {
 
     let bodyList = document.querySelector('.body__list');
@@ -24,6 +37,38 @@ let printTable = ( lista ) => {
 
 }
 
+function validar (user){
+
+    let resultado = false;
+
+    if( user.first_name == '' || user.first_name == "null" ){
+        showToast("AVISO: Campo nombre no informado", "bg-warning");
+    }
+    else if( user.last_name == '' || user.last_name == "null"){
+        showToast("AVISO: Campo apellido no informado", "bg-warning");
+    }
+    else{
+        resultado = true;
+    }
+    
+    return resultado;
+}
+
+function validarId (user){
+
+    let resultado = false;
+
+    if( user.id == '' || user.id == "null" ){
+        showToast("AVISO: Campo Id no informado", "bg-warning");
+    }
+    else{
+        resultado = true;
+    }
+    
+    return resultado;
+}
+
+
 async function getAlumnos(){
 
     const id  = document.querySelector('#id').value;
@@ -43,8 +88,6 @@ async function getAlumnos(){
     try {
         let data = await fetch( url, param );
         let result = await data.json();
-
-        console.log( result );
 
         printTable( result );
         
@@ -67,24 +110,31 @@ async function postAlumnos(){
 
         document.querySelector('#form').reset();
     
-        console.log(nuAlumno);
-    
         let url   = `http://localhost:3000/alumnos`;
+
+        if( validar(nuAlumno) ){
+
+            let param = {
     
-        let param = {
+                headers:{
+                    "content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify( nuAlumno ),
+                method: "POST"
+        
+            }
     
-            headers:{
-                "content-type": "application/json; charset=UTF-8"
-            },
-            body: JSON.stringify( nuAlumno ),
-            method: "POST"
-    
+            let data = await fetch ( url, param );
+            let result = await data.json();
+
+            if( result.err ){
+                showToast("ERROR: " + result.err, "bg-danger");
+            }
+            else{
+                showToast("Usuario Creado Correctamente", "bg-success");
+            }
+
         }
-
-        let data = await fetch ( url, param );
-        let result = await data.json();
-
-        console.log( result );
         
     } catch (error) {
         
@@ -110,25 +160,34 @@ async function putAlumnos(){
         document.querySelector('#form').reset();
     
         let url   = `http://localhost:3000/alumnos`;
+
+        if( validarId(nuInfo) ){
+
+            let param = {
     
-        let param = {
+                headers:{
+                    "content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify( nuInfo ),
+                method: "PUT"
+        
+            }
     
-            headers:{
-                "content-type": "application/json; charset=UTF-8"
-            },
-            body: JSON.stringify( nuInfo ),
-            method: "PUT"
+            console.log( param );
     
+            let data   = await fetch ( url, param );
+            let result = await data.json();
+    
+            if( result.err ){
+                showToast("ERROR: " + result.err, "bg-danger");
+            }
+            else{
+                showToast("Usuario Actualizado Correctamente", "bg-success");
+            }
+            
+
         }
-
-        console.log( param );
-
-        let data   = await fetch ( url, param );
-        let result = await data.json();
-
-        console.log( result );
-
-        printTable( result.resultado );
+    
 
     } catch (error) {
         
@@ -150,22 +209,31 @@ async function deleteAlumno(){
         document.querySelector('#form').reset();
 
         let url   = `http://localhost:3000/alumnos`;
-        
-        let param = {
-            
-            headers:{
-                "content-type": "application/json; charset=UTF-8"
-            },
-            body: JSON.stringify( indi ),
-            method: "DELETE"
-        }
-        
-        console.log( param );
-        
-        let data   = await fetch( url, param );
-        let result = await data.json();
 
-        console.log( result );
+        if( validar(indi) ){
+
+            let param = {
+            
+                headers:{
+                    "content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify( indi ),
+                method: "DELETE"
+            }
+            
+            console.log( param );
+            
+            let data   = await fetch( url, param );
+            let result = await data.json();
+    
+            if( result.err ){
+                showToast("ERROR: " + result.err, "bg-danger");
+            }
+            else{
+                showToast("Usuario Eliminado Correctamente", "bg-success");
+            }
+
+        }
 
     } 
     catch (error) {

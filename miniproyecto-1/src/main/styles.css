@@ -21,6 +21,7 @@ a{
     flex-direction: column;
     align-items: center;
     padding-bottom: 40px;
+    background-color: #17212f;
 }
 
 #header{
@@ -53,14 +54,18 @@ a{
     height: 40px;
     text-align: center;
     list-style: none;
+    line-height: 80px;
+    margin-top: 10px;
 }
 
-.menu a{
+.menu > li > a{
     display: block;
     width: 100%;
     height: 100%;
     line-height: 40px;
     transition: all 500ms;
+    text-decoration: none;
+    color: #B0B3B8;
 }
 
 .menu a:hover{ 
@@ -129,7 +134,7 @@ a{
     transition: all 500ms;
 }
 
-a:hover{
+.btns a:hover{
     color: #242526;
     background-color: #64b5f6;
 }
@@ -137,23 +142,4 @@ a:hover{
 .list__profesionales{
     width: 90%;
     display: none;
-}
-
-.table{
-    border: 1px solid #B0B3B8;
-    border-radius: 5px;
-    /* border-collapse: collapse; */
-    text-align: center;
-    color: #B0B3B8;
-
-}
-
-th{
-    padding: 10px 0;
-    background-color: #242526;
-    /* height: 30px; */
-}
-
-td{
-    padding: 5px 0;
 }

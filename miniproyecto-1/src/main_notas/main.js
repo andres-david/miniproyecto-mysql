@@ -1,3 +1,45 @@
+function showToast(message, color)
+{
+    document.getElementById("toastText").innerText=message;
+    let toastElement  = document.getElementById('toast')
+
+    toastElement.className = toastElement.className.replace("bg-warning").replace("bg-danger") + " "  + color;
+
+    let toast = new bootstrap.Toast(toastElement)
+    toast.show()
+}
+
+function validar (user){
+
+    let resultado = false;
+
+    if( user.date == '' || user.date == "null" ){
+        showToast("AVISO: Campo fecha no informado", "bg-warning");
+    }
+    else if( user.mark == '' || user.mark == "null"){
+        showToast("AVISO: Campo nota no informado", "bg-warning");
+    }
+    else{
+        resultado = true;
+    }
+    
+    return resultado;
+}
+
+function validarId (user){
+
+    let resultado = false;
+
+    if( user.id == '' || user.id == "null" ){
+        showToast("AVISO: Campo Id no informado", "bg-warning");
+    }
+    else{
+        resultado = true;
+    }
+    
+    return resultado;
+}
+
 let printTable = ( lista ) => {
 
     let bodyList = document.querySelector('.body__list');
@@ -68,21 +110,30 @@ async function postNotas(){
         console.log(nuMark);
     
         let url   = `http://localhost:3000/notas`;
+
+        if( validar(nuMark) ){
+
+            let param = {
     
-        let param = {
+                headers:{
+                    "content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify( nuMark ),
+                method: "POST"
+        
+            }
     
-            headers:{
-                "content-type": "application/json; charset=UTF-8"
-            },
-            body: JSON.stringify( nuMark ),
-            method: "POST"
+            let data = await fetch ( url, param );
+            let result = await data.json();
     
+            if( result.err ){
+                showToast("ERROR: " + result.err, "bg-danger");
+            }
+            else{
+                showToast("Nota Creada Correctamente", "bg-success");
+            }
+
         }
-
-        let data = await fetch ( url, param );
-        let result = await data.json();
-
-        console.log( result );
         
     } catch (error) {
         
@@ -106,23 +157,32 @@ async function putNotas(){
         document.querySelector('#form').reset();
     
         let url   = `http://localhost:3000/notas`;
+
+        if( validarId(nuMark) ){
+
+            let param = {
     
-        let param = {
+                headers:{
+                    "content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify( nuMark ),
+                method: "PUT"
+        
+            }
     
-            headers:{
-                "content-type": "application/json; charset=UTF-8"
-            },
-            body: JSON.stringify( nuMark ),
-            method: "PUT"
-    
+            let data   = await fetch ( url, param );
+            let result = await data.json();
+
+            if( result.err ){
+                showToast("ERROR: " + result.err, "bg-danger");
+            }
+            else{
+                showToast("Nota Actualizada Correctamente", "bg-success");
+            }
+
         }
-
-        console.log( param );
-
-        let data   = await fetch ( url, param );
-        let result = await data.json();
-
-        console.log( result );
+    
+        
 
     } catch (error) {
         
@@ -144,23 +204,32 @@ async function deleteNota(){
         document.querySelector('#form').reset();
 
         let url   = `http://localhost:3000/notas`;
-        
-        let param = {
+
+        if( validarId(indi) ){
+
+            let param = {
             
-            headers:{
-                "content-type": "application/json; charset=UTF-8"
-            },
-            body: JSON.stringify( indi ),
-            method: "DELETE"
+                headers:{
+                    "content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify( indi ),
+                method: "DELETE"
+            }
+            
+            console.log( param );
+            
+            let data   = await fetch( url, param );
+            let result = await data.json();
+
+            if( result.err ){
+                showToast("ERROR: " + result.err, "bg-danger");
+            }
+            else{
+                showToast("Nota Eliminada Correctamente", "bg-success");
+            }
+
         }
         
-        console.log( param );
-        
-        let data   = await fetch( url, param );
-        let result = await data.json();
-
-        console.log( result );
-
     } 
     catch (error) {
         

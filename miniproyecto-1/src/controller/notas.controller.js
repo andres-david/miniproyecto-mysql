@@ -48,7 +48,7 @@ function postNotas( request, response ){
                 response.send(String(result.insertId));
             }
             else{
-                response.send("-1");
+                response.send(result);
             }
         }
     })
